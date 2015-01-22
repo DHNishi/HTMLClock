@@ -9,4 +9,6 @@ function getTime() {
     setTimeout(getTime, 1000);
 }
 
+// Test.
+
 window.onload = getTime;
