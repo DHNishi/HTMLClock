@@ -11,4 +11,5 @@ function getTime() {
 
 // Test.
 
-window.onload = getTime;
+//window.onload = getTime;
+window.addEventListener("load", getTime)
