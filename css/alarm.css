@@ -11,6 +11,10 @@ h2 {
 	width:100px;
 	padding:10px 10px;
 }
+
+.deleteButton {
+	margin: 0px 10px;
+}
 .flexable {
 	display: -webkit-box;
 	display: -moz-box;
@@ -41,6 +45,10 @@ h2 {
 }
 #alarms {
 	margin-top:20px;
+}
+
+#alarms .time {
+	margin-left:20px;
 }
 /********** The black transparent mask when adding an alarm clock *********/
 #mask {

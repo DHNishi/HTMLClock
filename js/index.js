@@ -43,20 +43,28 @@ function hideAlarmPopup() {
     console.log('hideAlarmPopup') 
 }
 
-function insertAlarm(hours, mins, ampm, alarmName) {
+function insertAlarm(hours, mins, ampm, alarmName, parseObject) {
     console.log(hours + ":" + mins + ":" + ampm + " " + alarmName)
     var new_div = $("<div>")
     new_div.addClass('flexable')
+    new_div.attr('id', parseObject.id)
 
     var name_div = $("<div>")
     name_div.addClass('name')
-    name_div.html($("#alarmName").val())
+    name_div.html(alarmName)
     new_div.append(name_div)
 
     var time_div = $("<div>")
     time_div.addClass('time')
     time_div.html(hours + ":" + mins + " " + ampm)
     new_div.append(time_div)
+
+    var delete_button = $("<input type='button'>")
+    delete_button.addClass('button')
+    delete_button.addClass('deleteButton')
+    delete_button.click(deleteAlarm(parseObject))
+    delete_button.val('Delete')
+    new_div.append(delete_button)
 
     $('#alarms').append(new_div)
 }
@@ -68,11 +76,12 @@ function addAlarm() {
     var alarmName = $("#alarmName").val()
 
     var time = hours + ":" + mins + " " + ampm
+    var timeObj = {hours: hours, mins: mins, ampm: ampm}
     var AlarmObject = Parse.Object.extend("Alarm");
     var alarmObject = new AlarmObject();
-      alarmObject.save({"time": time,"alarmName": alarmName}, {
+    alarmObject.save({"time": timeObj,"alarmName": alarmName}, {
       success: function(object) {
-        insertAlarm(hours, mins, ampm, alarmName)
+        insertAlarm(hours, mins, ampm, alarmName, alarmObject)
         hideAlarmPopup(); 
       }
     });
@@ -86,10 +95,30 @@ function getAllAlarms() {
     query.find({
         success: function(results) {
           for (var i = 0; i < results.length; i++) { 
-            insertAlarm(results[i].get("time"), results[i].get("alarmName"));
+            time = results[i].get("time")
+            insertAlarm(time.hours, time.mins, time.ampm, results[i].get("alarmName"), results[i]);
           }
         }
     });
+}
+
+function deleteAlarm(parseObject) {
+    // Holla holla, get closures.
+    return function () {
+        parseObject.destroy({
+          success: function(myObject) {
+            // The object was deleted from the Parse Cloud
+            console.log("deleting ", parseObject.id)      
+            console.log ("deleted successfully")
+            $('#' + parseObject.id).remove()
+          },
+          error: function(myObject, error) {
+            console.log(error)
+            // The delete failed.
+            // error is a Parse.Error with an error code and message.
+          }
+        });
+    }
 }
 
 window.addEventListener("load", getTemp)
