@@ -83,7 +83,7 @@ function addAlarm(userId) {
     var alarmObject = new AlarmObject();
     alarmObject.save({"time": timeObj, "userId": userId, "alarmName": alarmName}, {
       success: function(object) {
-        _gaq.push(["_trackEvent", "Alarm", "Add"]);
+        ga('send', 'event', 'Alarm', 'Add');
         insertAlarm(hours, mins, ampm, alarmName, alarmObject)
         hideAlarmPopup(); 
       }
@@ -117,8 +117,7 @@ function deleteAlarm(parseObject) {
     return function () {
         parseObject.destroy({
           success: function(myObject) {
-            _gaq.push(["_trackEvent", "Alarm", "Delete"]);
-
+            ga('send', 'event', 'Alarm', 'Delete');
             // The object was deleted from the Parse Cloud
             console.log("deleting ", parseObject.id)      
             console.log ("deleted successfully")
