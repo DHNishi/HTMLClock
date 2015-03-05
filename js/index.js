@@ -183,6 +183,22 @@ function signinCallback(authResult) {
   }
 }
 
+function imgurCallback() {
+  var access_token = localStorage.getItem('accessToken')
+  var authorization = 'Bearer ' + access_token
+  $.ajax({
+      url: 'https://api.imgur.com/3/account/me',
+      method: 'GET',
+      headers: {
+          Authorization: authorization,
+          Accept: 'application/json'
+      },
+      success: function(result) {
+        alert(result.data.url)
+      }
+  });
+}
+
 window.addEventListener("load", getTemp)
 window.addEventListener("load", getGeolocation)
 //window.addEventListener("load", getAllAlarms)
